@@ -1,3 +1,21 @@
+effect = love.graphics.newPixelEffect [[
+extern number radius;
+extern vec2 imageSize;
+extern vec2 direction;
+
+vec4 effect(vec4 color, Image tex, vec2 tc, vec2 pc)
+{
+   color = vec4(0);
+   vec2 st;
+   vec2 pixdir = direction / imageSize;
+   for (float i = -radius; i <= radius; i++) {
+      st.xy = i * pixdir;
+      color += Texel(tex, tc + st);
+   }
+   return color / (2.0 * radius + 1.0);
+}
+]]
+
 grid = nil
 gridInfo = nil
 colors = nil
@@ -326,6 +344,10 @@ function love.load()
     startY = 1
     startDir = 'e'
     state = tryNew
+    blurHorizontal = love.graphics.newCanvas()
+    blurVertical = love.graphics.newCanvas()
+    effect:send('imageSize', {love.graphics.getWidth(), love.graphics.getHeight()})
+    effect:send('radius', 3)
 end
 
 function love.update(dt)
@@ -354,6 +376,10 @@ function drawBlock(gridX, gridY, blockInfo)
 end
 
 function love.draw()
+    blurHorizontal:clear()
+    blurVertical:clear()
+    love.graphics.setCanvas(blurHorizontal)
+
     if currentPair then
         local firstX, firstY, secondX, secondY = getGridCoords(currentPair)
         drawBlock(firstX, firstY, currentPair.first)
@@ -367,4 +393,16 @@ function love.draw()
     end
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.print(string.format("(%s, %s)", mouseGridPos[1], mouseGridPos[2]), 0, 0)
+
+    love.graphics.setPixelEffect(effect)
+
+    effect:send('direction', {1,0})
+    love.graphics.setCanvas(blurVertical)
+    love.graphics.draw(blurHorizontal, 0,0)
+
+    effect:send('direction', {0,1})
+    love.graphics.setCanvas()
+    love.graphics.draw(blurVertical, 0,0)
+    love.graphics.setPixelEffect()
+
 end

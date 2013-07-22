@@ -111,7 +111,7 @@ function inControl(dt)
         currentPair.dir = newDir
         local delayAmount
         if down then
-            delayAmount = 0.01
+            delayAmount = 0.025
         else
             delayAmount = 0.1
         end

@@ -12,9 +12,16 @@ crashBlocks = nil
 mouseGridPos = nil
 
 function randomBlock()
+    local randType = math.random(1, 100)
+    local type
+    if randType > 70 then
+        type = 'crash'
+    else
+        type = 'normal'
+    end
     return {
         color = colors[math.random(1, #colors)],
-        type = types[math.random(1, #types)]
+        type = type
     }
 end
 

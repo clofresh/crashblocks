@@ -29,20 +29,21 @@ end
 
 function inControl(dt)
     local newX, newY, newDir, down
-    if love.keyboard.isDown("a") then
+    local inputs = getInputs()
+    if inputs.left then
         newX = currentPair.x - 1
         newY = currentPair.y
         newDir = currentPair.dir
-    elseif love.keyboard.isDown("d") then
+    elseif inputs.right then
         newX = currentPair.x + 1
         newY = currentPair.y
         newDir = currentPair.dir
-    elseif love.keyboard.isDown("s") then
+    elseif inputs.down then
         newX = currentPair.x
         newY = currentPair.y + 1
         newDir = currentPair.dir
         down = true
-    elseif love.keyboard.isDown(" ") then
+    elseif inputs.rotate then
         newX = currentPair.x
         newY = currentPair.y
         newDir = nextDir[currentPair.dir]

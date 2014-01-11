@@ -2,6 +2,7 @@ require('src/grid')
 require('src/block')
 require('src/states')
 require('src/effects')
+require('src/input')
 
 mouseGridPos = {0, 0}
 

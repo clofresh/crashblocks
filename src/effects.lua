@@ -1,4 +1,4 @@
-effect = love.graphics.newPixelEffect [[
+effect = love.graphics.newShader [[
 extern number radius;
 extern vec2 imageSize;
 extern vec2 direction;

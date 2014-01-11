@@ -52,7 +52,7 @@ function love.draw()
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.print(string.format("(%s, %s)", mouseGridPos[1], mouseGridPos[2]), 0, 0)
 
-    love.graphics.setPixelEffect(effect)
+    love.graphics.setShader(effect)
 
     effect:send('direction', {1,0})
     love.graphics.setCanvas(blurVertical)
@@ -61,6 +61,6 @@ function love.draw()
     effect:send('direction', {0,1})
     love.graphics.setCanvas()
     love.graphics.draw(blurVertical, 0,0)
-    love.graphics.setPixelEffect()
+    love.graphics.setShader()
 
 end

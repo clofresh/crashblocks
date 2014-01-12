@@ -1,7 +1,6 @@
 require('src/grid')
 require('src/block')
 require('src/states')
-require('src/effects')
 require('src/input')
 
 mouseGridPos = {0, 0}
@@ -13,10 +12,6 @@ function love.load()
     end
     nextPair = newPair()
     state = tryNew
-    blurHorizontal = love.graphics.newCanvas()
-    blurVertical = love.graphics.newCanvas()
-    effect:send('imageSize', {love.graphics.getWidth(), love.graphics.getHeight()})
-    effect:send('radius', 3)
 end
 
 function love.update(dt)
@@ -35,10 +30,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    blurHorizontal:clear()
-    blurVertical:clear()
-    love.graphics.setCanvas(blurHorizontal)
-
     if currentPair then
         local firstX, firstY, secondX, secondY = getGridCoords(currentPair)
         drawBlock(firstX, firstY, currentPair.first)
@@ -52,16 +43,9 @@ function love.draw()
     end
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.print(string.format("(%s, %s)", mouseGridPos[1], mouseGridPos[2]), 0, 0)
+end
 
-    love.graphics.setShader(effect)
-
-    effect:send('direction', {1,0})
-    love.graphics.setCanvas(blurVertical)
-    love.graphics.draw(blurHorizontal, 0,0)
-
-    effect:send('direction', {0,1})
-    love.graphics.setCanvas()
-    love.graphics.draw(blurVertical, 0,0)
-    love.graphics.setShader()
-
+function love.joystickpressed(joystick, button)
+  love.graphics.print(joystick:getGUID() .. " - " .. button, 100, 100)
+  print(joystick, button)
 end

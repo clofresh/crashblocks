@@ -6,6 +6,7 @@ require('src/input')
 mouseGridPos = {0, 0}
 
 function love.load()
+    initGamepads()
     math.randomseed(1)
     for i, color in pairs(colors) do
         crashBlocks[color] = {}

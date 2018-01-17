@@ -1,9 +1,9 @@
 grid = {}
 gridInfo = {
-    w = 6,
-    h = 12,
-    tileWidth = 32,
-    tileHeight = 32,
+    w = 8,
+    h = 14,
+    tileWidth = 128,
+    tileHeight = 128,
 }
 nextDir = {
     e = 's',

@@ -2,7 +2,7 @@ keyMappings = {
     ["a"] = "left",
     ["d"] = "right",
     ["s"] = "down",
-    [" "] = "rotate",
+    ["space"] = "rotate",
 }
 
 gamepads = {

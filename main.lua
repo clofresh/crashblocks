@@ -6,7 +6,6 @@ require('src/input')
 mouseGridPos = {0, 0}
 
 function love.load()
-    initGamepads()
     math.randomseed(1)
     for i, color in pairs(colors) do
         crashBlocks[color] = {}
@@ -44,9 +43,4 @@ function love.draw()
     end
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.print(string.format("(%s, %s)", mouseGridPos[1], mouseGridPos[2]), 0, 0)
-end
-
-function love.joystickpressed(joystick, button)
-  love.graphics.print(joystick:getGUID() .. " - " .. button, 100, 100)
-  print(joystick, button)
 end

@@ -72,11 +72,25 @@ function getGridCoords(pair)
     return firstX, firstY, secondX, secondY
 end
 
-function getPixelCoords(gridX, gridY)
-    return gridX * gridInfo.tileWidth,
+function getPixelCoords(gridX, gridY, prevGridX, prevGridY, t)
+    if prevGridX ~= nil and prevGridY ~= nil and t ~= nil then
+        local dx = gridX - prevGridX
+        local dy = gridY - prevGridY
+        local mag = math.sqrt(dx * dx + dy * dy)
+        if mag > 0 then
+            dx = dx / mag * t
+            dy = dy / mag * t
+        end
+        return (prevGridX + dx) * gridInfo.tileWidth,
+           (prevGridY + dy) * gridInfo.tileHeight,
+           gridInfo.tileWidth,
+           gridInfo.tileHeight
+    else
+        return gridX * gridInfo.tileWidth,
            gridY * gridInfo.tileHeight,
            gridInfo.tileWidth,
            gridInfo.tileHeight
+   end
 end
 
 function gridSet(grid, x, y, value)
@@ -97,6 +111,9 @@ end
 
 function gridDel(grid, x, y)
     if grid[x] then
-        grid[x][y] = nil
+        grid[x][y].prevX = nil
+        grid[x][y].prevY = nil
+        grid[x][y].state = 'deleting'
+        grid[x][y].t = 0
     end
 end

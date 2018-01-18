@@ -7,8 +7,41 @@ function delay(delayTimeLimit, nextState)
     local delayTime = 0
     return function(dt)
         delayTime = delayTime + dt
+        local pct = delayTime / delayTimeLimit
+        if currentPair then
+            currentPair.first.t = pct
+            currentPair.second.t = pct
+        end
+
+        for x, ys in pairs(grid) do
+            for y, blockInfo in pairs(ys) do
+                if blockInfo.t then
+                    blockInfo.t = pct
+                end
+            end
+        end
+
         if delayTime > delayTimeLimit then
             state = nextState
+            if currentPair then
+                currentPair.first.prevX = nil
+                currentPair.first.prevY = nil
+                currentPair.first.t = nil
+                currentPair.second.prevX = nil
+                currentPair.second.prevY = nil
+                currentPair.second.t = nil
+            end
+            for x, ys in pairs(grid) do
+                for y, blockInfo in pairs(ys) do
+                    if blockInfo.t then
+                        if blockInfo.state == 'deleting' then
+                            grid[x][y] = nil
+                        else
+                            blockInfo.t = nil
+                        end
+                    end
+                end
+            end
         end
     end
 end
@@ -34,19 +67,44 @@ function inControl(dt)
         newX = currentPair.x - 1
         newY = currentPair.y
         newDir = currentPair.dir
+        local firstPrevX, firstPrevY, secondPrevX, secondPrevY = getGridCoords(currentPair)
+        currentPair.first.prevX = firstPrevX
+        currentPair.first.prevY = firstPrevY
+        currentPair.first.t = 0
+        currentPair.second.prevX = secondPrevX
+        currentPair.second.prevY = secondPrevY
+        currentPair.second.t = 0
     elseif inputs.right then
         newX = currentPair.x + 1
         newY = currentPair.y
         newDir = currentPair.dir
+        local firstPrevX, firstPrevY, secondPrevX, secondPrevY = getGridCoords(currentPair)
+        currentPair.first.prevX = firstPrevX
+        currentPair.first.prevY = firstPrevY
+        currentPair.first.t = 0
+        currentPair.second.prevX = secondPrevX
+        currentPair.second.prevY = secondPrevY
+        currentPair.second.t = 0
     elseif inputs.down then
         newX = currentPair.x
         newY = currentPair.y + 1
         newDir = currentPair.dir
         down = true
+        local firstPrevX, firstPrevY, secondPrevX, secondPrevY = getGridCoords(currentPair)
+        currentPair.first.prevX = firstPrevX
+        currentPair.first.prevY = firstPrevY
+        currentPair.first.t = 0
+        currentPair.second.prevX = secondPrevX
+        currentPair.second.prevY = secondPrevY
+        currentPair.second.t = 0
     elseif inputs.rotate then
         newX = currentPair.x
         newY = currentPair.y
         newDir = nextDir[currentPair.dir]
+        local _, _, secondPrevX, secondPrevY = getGridCoords(currentPair)
+        currentPair.second.prevX = secondPrevX
+        currentPair.second.prevY = secondPrevY
+        currentPair.second.t = 0
     end
 
     if newX and canMove(newX, newY, newDir) then
@@ -61,23 +119,25 @@ function inControl(dt)
         end
         state = delay(delayAmount, inControl)
     elseif down then
-        local firstX, firstY, secondX, secondY = getGridCoords(currentPair)
-        gridSet(grid, firstX, firstY, currentPair.first)
-        gridSet(grid, secondX, secondY, currentPair.second)
+        state = delay(0.1, function(dt)
+            local firstX, firstY, secondX, secondY = getGridCoords(currentPair)
+            gridSet(grid, firstX, firstY, currentPair.first)
+            gridSet(grid, secondX, secondY, currentPair.second)
 
-        if currentPair.first.type == 'crash' then
-            table.insert(crashBlocks[currentPair.first.color],
-                         {firstX, firstY, currentPair.first})
-        end
-        if currentPair.second.type == 'crash' then
-            table.insert(crashBlocks[currentPair.second.color],
-                         {secondX, secondY, currentPair.second})
-        end
-        currentPair = nil
+            if currentPair.first.type == 'crash' then
+                table.insert(crashBlocks[currentPair.first.color],
+                             {firstX, firstY, currentPair.first})
+            end
+            if currentPair.second.type == 'crash' then
+                table.insert(crashBlocks[currentPair.second.color],
+                             {secondX, secondY, currentPair.second})
+            end
+            currentPair = nil
 
-        state = function(dt)
-            applyGravity(clearBlocks, dt)
-        end
+            state = function(dt)
+                applyGravity(clearBlocks, dt)
+            end
+        end)
     end
 end
 
@@ -90,6 +150,9 @@ function applyGravity(nextState, dt)
             currentBlock = col[y]
             if currentBlock and not prevBlock then
                 local newY = y + 1
+                currentBlock.prevX = x
+                currentBlock.prevY = y
+                currentBlock.t = 0
                 col[newY] = currentBlock
                 col[y] = nil
                 changed = true
@@ -137,9 +200,9 @@ function clearBlocks(dt)
             table.remove(crashBlocks[keys[1]], keys[2])
         end
         print("Cleared some blocks, applying gravity")
-        state = function(dt)
+        state = delay(0.25, function(dt)
             applyGravity(clearBlocks, dt)
-        end
+        end)
     else
         state = tryNew
     end

@@ -32,10 +32,6 @@ function newPair()
     }
 end
 
-function colorVal(name)
-    return unpack(colorVals[name])
-end
-
 function findChain(startingBlock, seen)
     local chain = {}
     local fringe = {startingBlock}
@@ -58,8 +54,14 @@ function findChain(startingBlock, seen)
 end
 
 function drawBlock(gridX, gridY, blockInfo)
-    local x, y, w, h = getPixelCoords(gridX, gridY)
-    love.graphics.setColor(colorVal(blockInfo.color))
+    local x, y, w, h = getPixelCoords(gridX, gridY,
+        blockInfo.prevX, blockInfo.prevY, blockInfo.t)
+    local colorOriginal = colorVals[blockInfo.color]
+    local color = {colorOriginal[1], colorOriginal[2], colorOriginal[3], colorOriginal[4]}
+    if blockInfo.state == 'deleting' then
+        color[4] = (1 - blockInfo.t) * 255
+    end
+    love.graphics.setColor(color)
     if blockInfo.type == 'normal' then
         love.graphics.rectangle("fill", x, y, w, h)
     elseif blockInfo.type == 'crash' then

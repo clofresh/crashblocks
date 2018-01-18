@@ -1,7 +1,11 @@
+local Sound = require('src/sound')
+
 state = nil
 crashBlocks = {}
 currentPair = nil
 nextPair = nil
+clearedBlocks = false
+playedMovePrev = false
 
 function delay(delayTimeLimit, nextState)
     local delayTime = 0
@@ -108,6 +112,10 @@ function inControl(dt)
     end
 
     if newX and canMove(newX, newY, newDir) then
+        if not playedMovePrev then
+            Sound.move:play()
+            playedMovePrev = true
+        end
         currentPair.x = newX
         currentPair.y = newY
         currentPair.dir = newDir
@@ -138,6 +146,8 @@ function inControl(dt)
                 applyGravity(clearBlocks, dt)
             end
         end)
+    elseif not newX then
+        playedMovePrev = false
     end
 end
 
@@ -196,6 +206,8 @@ function clearBlocks(dt)
     end
 
     if changed then
+        clearedBlocks = true
+        Sound.disappear:play()
         for i, keys in pairs(toRemove) do
             table.remove(crashBlocks[keys[1]], keys[2])
         end
@@ -204,6 +216,11 @@ function clearBlocks(dt)
             applyGravity(clearBlocks, dt)
         end)
     else
+        if not clearedBlocks then
+            Sound.playBeep()
+        else
+            clearedBlocks = false
+        end
         state = tryNew
     end
 end

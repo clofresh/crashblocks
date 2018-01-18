@@ -110,7 +110,7 @@ function gridGet(grid, x, y)
 end
 
 function gridDel(grid, x, y)
-    if grid[x] then
+    if grid[x] and grid[x][y] then
         grid[x][y].prevX = nil
         grid[x][y].prevY = nil
         grid[x][y].state = 'deleting'

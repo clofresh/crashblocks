@@ -2,11 +2,13 @@ require('src/grid')
 require('src/block')
 require('src/states')
 require('src/input')
+local Sound = require('src/sound')
 
 mouseGridPos = {0, 0}
 
 function love.load()
     math.randomseed(1)
+    Sound.load()
     for i, color in pairs(colors) do
         crashBlocks[color] = {}
     end

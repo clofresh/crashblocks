@@ -1,0 +1,22 @@
+/* Override the default love.js page chrome so the LÖVE canvas gets the
+   whole viewport. Both canvases (loading + main) are positioned over the
+   same fixed rectangle so there is no layout shift when the loading
+   canvas hides itself after wasm boot. */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  overflow: hidden;
+}
+h1, footer {
+  display: none;
+}
+#canvas, #loadingCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  object-fit: contain;
+}

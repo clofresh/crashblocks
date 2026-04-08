@@ -20,6 +20,8 @@ SHADERS := $(shell find shaders -type f -name '*.vert' -or -name '*.frag')
 LOVE_FILE := game.love
 FULL_LOVE_FILE := ./$(LOVE_FILE)
 DROPBOX_FILE := ~/Dropbox/Apps/love/$(NAME).love
+WEB_DIR := web
+NPX := npx --yes
 
 default: run-desktop
 
@@ -51,8 +53,17 @@ $(FULL_LOVE_FILE): $(ASSETS) $(CODE) $(SHADERS)
 run-desktop: $(ASSETS)
 	love .
 
+web: $(WEB_DIR)/index.html
+$(WEB_DIR)/index.html: $(FULL_LOVE_FILE) package.json web_template/style.css
+	rm -rf $(WEB_DIR)
+	$(NPX) love.js -c -t "Crash Blocks" $(FULL_LOVE_FILE) $(WEB_DIR)
+	# Inject our stylesheet so the canvas letterboxes into the viewport
+	# and the default love.js page chrome (h1, footer) gets out of the way.
+	cp web_template/style.css $(WEB_DIR)/style.css
+	sed -i 's|</head>|<link rel="stylesheet" href="style.css"></head>|' $(WEB_DIR)/index.html
+
 dropbox: $(DROPBOX_FILE)
 $(DROPBOX_FILE): $(FULL_LOVE_FILE)
 	cp $< $@
 
-.PHONY: run-desktop default assets dropbox
+.PHONY: run-desktop web default assets dropbox

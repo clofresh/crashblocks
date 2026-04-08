@@ -13,7 +13,10 @@ Everything is driven by the `Makefile`:
 - `make` or `make run-desktop` — builds the `assets/` tree (symlinks/Tiled exports/SVG meshes from `src_assets/`) then launches `love .`.
 - `make assets` — just (re)build the `assets/` tree. Required because `src/sound.lua` and friends load from `assets/sounds/...`, not `src_assets/`.
 - `make game.love` — package a `.love` file (zips code + assets).
+- `make web` — produce a static love.js (Davidobot fork) web bundle in `web/`. Runs `npx love.js -c` (compatibility mode, no `SharedArrayBuffer`, required because GitHub Pages can't set COOP/COEP headers), copies `web_template/style.css` over the default page chrome, and injects a `<link>` into the generated `index.html`. Requires Node — `npm install` first to pin the love.js version from `package.json`. Serve locally with `python -m http.server -d web/ 8000`.
 - `make dropbox` — copies the built `.love` to `~/Dropbox/Apps/love/`.
+
+The `.github/workflows/pages.yml` workflow runs `make web` on every push to `master` and deploys `web/` to GitHub Pages. Repo Settings → Pages must be set to Source = "GitHub Actions" for the deploy to land.
 
 There are no tests, no linter, and no package manager — the project is just Lua source loaded by LÖVE. Debug mode is opt-in: pass `-debug` on the command line and `main.lua` will `require("mobdebug").start()` each frame.
 

@@ -1,2 +1,5 @@
 assets
 *.love
+web/
+node_modules/
+package-lock.json

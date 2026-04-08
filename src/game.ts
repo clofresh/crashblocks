@@ -1,7 +1,7 @@
-import { Excalibur } from 'excalibur';
+import { Engine } from 'excalibur';
 import { GameState } from './states/GameState';
 
-export class CrashBlocksGame extends Excalibur.Game {
+export class CrashBlocksGame extends Engine {
     private currentState: GameState | null = null;
 
     public transitionTo(state: GameState) {

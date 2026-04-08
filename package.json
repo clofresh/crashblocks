@@ -1,0 +1,8 @@
+{
+  "name": "crashblocks-web",
+  "private": true,
+  "description": "love.js web build pipeline for Crash Blocks. Run `make web` to produce a static bundle in web/.",
+  "devDependencies": {
+    "love.js": "^11.5.0"
+  }
+}

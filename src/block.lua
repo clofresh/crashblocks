@@ -2,10 +2,10 @@ colors = {
     'red', 'green', 'blue', 'yellow'
 }
 colorVals = {
-    red = {255, 0, 0, 255},
-    green = {0, 255, 0, 255},
-    blue = {0, 0, 255, 255},
-    yellow = {255, 255, 0, 255},
+    red = {1, 0, 0, 1},
+    green = {0, 1, 0, 1},
+    blue = {0, 0, 1, 1},
+    yellow = {1, 1, 0, 1},
 }
 
 function randomBlock()
@@ -59,7 +59,7 @@ function drawBlock(gridX, gridY, blockInfo)
     local colorOriginal = colorVals[blockInfo.color]
     local color = {colorOriginal[1], colorOriginal[2], colorOriginal[3], colorOriginal[4]}
     if blockInfo.state == 'deleting' then
-        color[4] = (1 - blockInfo.t) * 255
+        color[4] = 1 - blockInfo.t
     end
     love.graphics.setColor(color)
     if blockInfo.type == 'normal' then

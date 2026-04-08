@@ -14,7 +14,7 @@ FONTS := assets/fonts $(shell find src_assets/fonts -type f -name '*.ttf' \
 									| sed -e 's/src_assets/assets/g')
 ASSETS := $(MAPS) $(MESHES) $(IMAGES) $(SOUNDS) $(FONTS)
 
-CODE := $(shell find . -type f -name '*.lua')
+CODE := $(shell find . -type f -name '*.lua' -not -path './node_modules/*' -not -path './web/*')
 SHADERS := $(shell find shaders -type f -name '*.vert' -or -name '*.frag')
 
 LOVE_FILE := game.love

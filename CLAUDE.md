@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Crash Blocks is a falling-block puzzle game (Puyo Puyo / Dr. Mario style) built with the [LÖVE](https://love2d.org) 2D Lua framework. Targets desktop. `conf.lua` pins the LÖVE API version to **0.10.2** — newer LÖVE versions have breaking changes (e.g. color values are 0–1 floats instead of 0–255 ints, `math.atan2` is gone, `love.audio.newSource` requires a type argument), so the code as written will only run cleanly on 0.10.x.
+Crash Blocks is a falling-block puzzle game (Puyo Puyo / Dr. Mario style) built with the [LÖVE](https://love2d.org) 2D Lua framework. Targets desktop. `conf.lua` pins the LÖVE API version to **11.5**; color values are 0–1 floats and audio sources are loaded as `'static'`, so the code only runs on 11.x.
 
 ## Build / run
 
@@ -67,7 +67,7 @@ Blocks are plain tables: `{color, type, prevX?, prevY?, t?, state?}`. `type` is 
 
 ### Input (`src/input.lua`)
 
-`getInputs()` returns `{left?, right?, down?, rotate?, touches}`. Keyboard mapping is fixed in `keyMappings` (`a`/`d`/`s`/space). Touch is a swipe gesture: a single in-flight touch is converted to a unit vector and bucketed by angle (`atan2`-based) into one of the four actions; only the first touch in `touches` is considered (the loop has an unconditional `break`). `love.touchpressed/moved/released` mutate the global `touches` table.
+`getInputs()` returns `{left?, right?, down?, rotate?, touches}`. Keyboard mapping is fixed in `keyMappings` (`a`/`d`/`s`/space). Touch is a swipe gesture: a single in-flight touch is converted to a unit vector and bucketed by angle (`math.atan(y, x)`-based) into one of the four actions; only the first touch in `touches` is considered (the loop has an unconditional `break`). `love.touchpressed/moved/released` mutate the global `touches` table.
 
 ### Sound (`src/sound.lua`)
 

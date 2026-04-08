@@ -26,7 +26,7 @@ function getKeyboardInputs(inputs)
         if mag > 3 then
             swipe.x = swipe.x / mag
             swipe.y = swipe.y / mag
-            local angle = math.atan2(swipe.y, swipe.x)
+            local angle = math.atan(swipe.y, swipe.x)
             local dir = angle / math.pi
             if dir < -0.3 and dir > -0.7 then
                 inputs.rotate = true

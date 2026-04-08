@@ -1,8 +1,17 @@
 {
-  "name": "crashblocks-web",
-  "private": true,
-  "description": "love.js web build pipeline for Crash Blocks. Run `make web` to produce a static bundle in web/.",
+  "name": "crash-blocks",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "excalibur": "^0.14.0"
+  },
   "devDependencies": {
-    "love.js": "^11.4.1"
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
   }
 }

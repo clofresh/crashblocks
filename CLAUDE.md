@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Crash Blocks is a falling-block puzzle game (Puyo Puyo / Dr. Mario style) built with the [LÖVE](https://love2d.org) 2D Lua framework. Targets desktop and Android (via `packaging/love-android-sdl2`). `conf.lua` pins the LÖVE API version to **0.10.2** — newer LÖVE versions have breaking changes (e.g. color values are 0–1 floats instead of 0–255 ints, `math.atan2` is gone, `love.audio.newSource` requires a type argument), so the code as written will only run cleanly on 0.10.x.
+Crash Blocks is a falling-block puzzle game (Puyo Puyo / Dr. Mario style) built with the [LÖVE](https://love2d.org) 2D Lua framework. Targets desktop. `conf.lua` pins the LÖVE API version to **0.10.2** — newer LÖVE versions have breaking changes (e.g. color values are 0–1 floats instead of 0–255 ints, `math.atan2` is gone, `love.audio.newSource` requires a type argument), so the code as written will only run cleanly on 0.10.x.
 
 ## Build / run
 
@@ -13,7 +13,6 @@ Everything is driven by the `Makefile`:
 - `make` or `make run-desktop` — builds the `assets/` tree (symlinks/Tiled exports/SVG meshes from `src_assets/`) then launches `love .`.
 - `make assets` — just (re)build the `assets/` tree. Required because `src/sound.lua` and friends load from `assets/sounds/...`, not `src_assets/`.
 - `make game.love` — package a `.love` file (zips code + assets).
-- `make install-love` / `make run-mobile` / `make install-apk` / `make logcat` — Android targets, all assume `adb` and the `packaging/love-android-sdl2` checkout. The APK build runs `gradle build` inside `$(ANDROID_DIR)` and needs `local.properties` pointing at `/opt/android-sdk` and `/opt/android-ndk`.
 - `make dropbox` — copies the built `.love` to `~/Dropbox/Apps/love/`.
 
 There are no tests, no linter, and no package manager — the project is just Lua source loaded by LÖVE. Debug mode is opt-in: pass `-debug` on the command line and `main.lua` will `require("mobdebug").start()` each frame.
